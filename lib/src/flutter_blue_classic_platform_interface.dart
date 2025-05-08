@@ -91,6 +91,13 @@ abstract class FlutterBlueClassicPlatform extends PlatformInterface {
     throw UnimplementedError('bondDevice() has not been implemented.');
   }
 
+  /// Checks if the device is connected.
+  ///
+  /// Returns true whether the device is connected.
+  Future<bool> isConnected(String address) {
+    throw UnimplementedError('isConnected() has not been implemented.');
+  }
+
   /// Creates a connection to the device with the given address.
   ///
   /// You can also pass the service record uuid to lookup RFCOMM channel. If you do not provide one yourself, the

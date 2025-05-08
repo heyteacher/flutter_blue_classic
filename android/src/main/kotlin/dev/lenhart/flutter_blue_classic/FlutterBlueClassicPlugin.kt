@@ -28,6 +28,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.UUID
 import java.util.concurrent.Executors
+import java.lang.reflect.Method
 
 /** FlutterBlueClassicPlugin */
 class FlutterBlueClassicPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -145,6 +146,7 @@ class FlutterBlueClassicPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
             "stopScan" -> stopScan(result)
             "isScanningNow" -> isScanningNow(result)
             "bondDevice" -> bondDevice(result, call.argument<String>("address") ?: "")
+            "isConnected" -> isConnected(result, call.argument<String>("address") ?: "")
             "connect" -> connect(
                 result,
                 call.argument<String>("address") ?: "",
@@ -354,6 +356,42 @@ class FlutterBlueClassicPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
                 if (success) {
                     val device = bluetoothAdapter?.getRemoteDevice(address)
                     result.success(device?.createBond() ?: false)
+                } else {
+                    result.error(
+                        PermissionManager.ERROR_PERMISSION_DENIED,
+                        String.format(
+                            "Required permission(s) %s denied",
+                            deniedPermissions?.joinToString() ?: ""
+                        ), null
+                    )
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun isConnected(result: Result, address: String) {
+        if (!BluetoothAdapter.checkBluetoothAddress(address)) {
+            result.error(
+                BlueClassicHelper.ERROR_ADDRESS_INVALID,
+                "The bluetooth address $address is invalid",
+                null
+            )
+            return
+        }
+
+        val permissions = ArrayList<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+
+        permissionManager.ensurePermissions(permissions.toTypedArray()) { success: Boolean, deniedPermissions: List<String>? ->
+            run {
+                if (success) {
+                    val device = bluetoothAdapter?.getRemoteDevice(address)
+                    val m: Method? = device?.javaClass?.getMethod("isConnected")             
+                    val connected = m?.invoke(device) as Boolean
+                    result.success(connected ?: false)
                 } else {
                     result.error(
                         PermissionManager.ERROR_PERMISSION_DENIED,

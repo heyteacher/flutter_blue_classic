@@ -52,6 +52,11 @@ class FlutterBlueClassic {
   /// Returns whether the bond was successfully created.
   Future<bool> bondDevice(String address) => _instance.bondDevice(address);
 
+  /// Checks if the device is connected.
+  ///
+  /// Returns true whether the device is connected
+  Future<bool> isConnected(String address) => _instance.isConnected(address);
+
   /// Tries to create a connection to the device with the given address.
   Future<BluetoothConnection?> connect(String address, {String? uuid}) =>
       _instance.connect(address, uuid: uuid);
