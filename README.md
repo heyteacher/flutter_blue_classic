@@ -5,17 +5,17 @@ If you want to use an Bluetooth low energy (BLE) device, you might want to
 consider [flutter_blue_plus](https://pub.dev/packages/flutter_blue_plus).
 
 <!-- TOC -->
-* [flutter_blue_classic](#flutter_blue_classic)
-  * [A note on iOS](#a-note-on-ios)
-  * [Getting Started](#getting-started)
-    * [minSdkVersion](#minsdkversion)
-    * [Permissions](#permissions)
-      * [Without location access](#without-location-access)
-      * [With location access](#with-location-access)
-  * [Reference](#reference)
-    * [FlutterBlueClassic](#flutterblueclassic)
-    * [BluetoothConnection](#bluetoothconnection)
-  * [Acknowledgement](#acknowledgement)
+- [flutter\_blue\_classic](#flutter_blue_classic)
+  - [A note on iOS](#a-note-on-ios)
+  - [Getting Started](#getting-started)
+    - [minSdkVersion](#minsdkversion)
+    - [Permissions](#permissions)
+      - [Without location access](#without-location-access)
+      - [With location access](#with-location-access)
+  - [Reference](#reference)
+    - [FlutterBlueClassic](#flutterblueclassic)
+    - [BluetoothConnection](#bluetoothconnection)
+  - [Acknowledgement](#acknowledgement)
 <!-- TOC -->
 
 ## A note on iOS
@@ -105,6 +105,7 @@ final blueClassic = FlutterBlueClassic(usesFineLocation: true);
 | turnOn          | Requests to turns the bluetooth adapter on                         |
 | bondDevice      | Requests to create a bond with a bluetooth device                  |
 | connect         | Tries to connect with a bluetooth device                           |
+| isConnected     | Checks whether the device is already connected                     |
 
 ### BluetoothConnection
 |             | Description                                                                                        |
