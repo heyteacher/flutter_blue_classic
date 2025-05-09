@@ -370,13 +370,31 @@ class FlutterBlueClassicPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     }
 
     @SuppressLint("MissingPermission")
-    private fun isConnected(result: Result, address: String) {
+    private fun _isConnected(result: Result, address: String) {
         if (!BluetoothAdapter.checkBluetoothAddress(address)) {
             result.error(
                 BlueClassicHelper.ERROR_ADDRESS_INVALID,
                 "The bluetooth address $address is invalid",
                 null
             )
+            return
+        }
+        val device = bluetoothAdapter?.getRemoteDevice(address)
+        val m: Method? = device?.javaClass?.getMethod("isConnected")             
+        val connected = m?.invoke(device) as Boolean
+        result.success(connected ?: false)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun isConnected(result: Result, address: String) {
+
+        // permissionManager is not initialized when the plugin is not attached 
+        // to an activity or when the activity is not in the foreground
+        // in this case we cannot check if the permission is granted
+        // so we just return the result of the isConnected method
+        // this is not ideal, but it is better than crashing the app
+        if (!::permissionManager.isInitialized) {
+            _isConnected(result, address)
             return
         }
 
