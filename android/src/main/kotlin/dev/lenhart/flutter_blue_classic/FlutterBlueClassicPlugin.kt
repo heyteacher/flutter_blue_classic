@@ -406,10 +406,7 @@ class FlutterBlueClassicPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
         permissionManager.ensurePermissions(permissions.toTypedArray()) { success: Boolean, deniedPermissions: List<String>? ->
             run {
                 if (success) {
-                    val device = bluetoothAdapter?.getRemoteDevice(address)
-                    val m: Method? = device?.javaClass?.getMethod("isConnected")             
-                    val connected = m?.invoke(device) as Boolean
-                    result.success(connected ?: false)
+                    _isConnected(result, address)
                 } else {
                     result.error(
                         PermissionManager.ERROR_PERMISSION_DENIED,
